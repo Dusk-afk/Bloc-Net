@@ -31,7 +31,7 @@ contract SocialMedia {
 
     uint256 public postCount;
 
-    event PostCreated(uint256 indexed postId, address indexed userAddress, string text);
+    event PostCreated(uint256 indexed postId, address indexed userAddress, string text, string[] tags, string gif, address[] mentions, uint256 timestamp);
     event CommentAdded(uint256 indexed postId, uint256 indexed commentId, address indexed userAddress, string text);
 
     function isRegistered() public view returns (bool) {
@@ -57,7 +57,7 @@ contract SocialMedia {
         newPost.mentions = _mentions;
         newPost.timestamp = block.timestamp;
 
-        emit PostCreated(postCount, msg.sender, _text);
+        emit PostCreated(postCount, msg.sender, _text, _tags, _gif, _mentions, block.timestamp);
     }
 
     function addComment(uint256 _postId, string memory _text, uint256 _replyTo) public {
@@ -78,5 +78,31 @@ contract SocialMedia {
         post.comments.push(newComment);
 
         emit CommentAdded(_postId, commentId, msg.sender, _text);
+    }
+
+    function getPost(uint256 _postId) public view returns (
+        uint256 id,
+        string memory text,
+        string[] memory tags,
+        string memory gif,
+        address[] memory mentions,
+        uint256 timestamp,
+        Comment[] memory comments,
+        uint256[] memory reactions
+    ) {
+        require(_postId <= postCount, "Invalid post ID");
+
+        Post storage post = posts[_postId];
+
+        return (
+            post.id,
+            post.text,
+            post.tags,
+            post.gif,
+            post.mentions,
+            post.timestamp,
+            post.comments,
+            post.reactions
+        );
     }
 }

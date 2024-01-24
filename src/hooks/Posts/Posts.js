@@ -16,6 +16,10 @@ export const usePosts = () => {
                 postId: log.data.postId,
                 userAddress: log.data.userAddress,
                 text: log.data.text,
+                tags: log.data.tags,
+                gif: log.data.gif,
+                mentions: log.data.mentions,
+                timestamp: log.data.timestamp,
             }
         }))
     }, [logs===undefined ? null : logs.value])
